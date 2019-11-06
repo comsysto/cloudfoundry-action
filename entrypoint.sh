@@ -7,6 +7,7 @@ user=$4
 password=$5
 echo "Logging in to cf api $api org $org and space $space"
 
-echo "TODO remove this message - Credentials{user: $user, password: $password}"
+echo "cf login -a \"$api\" -u \"$user\" -p \"$password\" -o \"$org\" -s \"$space\""
+# cf login -a "$api" -u "$user" -p "$password" -o "$org" -s "$space"
 
 echo ::set-output name=deploymentResult::"successful"
