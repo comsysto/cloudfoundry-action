@@ -1,5 +1,11 @@
-# Container Action Template
+# Cloudfoundry Action
 
-To get started, click the `Use this template` button on this repository [which will create a new repository based on this template](https://github.blog/2019-06-06-generate-new-repositories-with-repository-templates/).
+## Purpose 
 
-For info on how to build your first Container action, see the [toolkit docs folder](https://github.com/actions/toolkit/blob/master/docs/container-action.md).
+With this github action it is possible to authenticate to cloudfoundry.
+
+## Sources:
+
+* [How to create a new repository based on a template](https://github.blog/2019-06-06-generate-new-repositories-with-repository-templates/)
+
+* [How to build a container action](https://github.com/actions/toolkit/blob/master/docs/container-action.md)
