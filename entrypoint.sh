@@ -24,10 +24,12 @@ target(){
 }
 
 deploy(){
-  echo "deploying ..."
-  ls -la "$artifactDir"
-  # cd "$artifactDir" || exit
-  # processStatus=$(cf push)
+  echo "Deploying ..."
+  mv "$artifactDir/*" .
+
+  artifactName=$(find . -name '*.jar')
+
+  processStatus=$(cf push -f "$artifactName" --no-start)
 }
 
 
@@ -46,6 +48,6 @@ case "$authenticationResult" in
    ;;
 esac
 
-::set-output name=deploymentResult::"$processStatus"
+echo ::set-output name=deploymentResult::"$processStatus"
 
 
