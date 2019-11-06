@@ -6,14 +6,16 @@ space=$3
 user=$4
 password=$5
 
-echo "cf api $api"
+cf api "$api"
 
 echo "Loggin in to cloudfoundry at $api"
-# authenticationResult=$(cf auth "$user" "$password")
-# if [[ $authenticationResult != *"OK"* ]]; then
-#  ::set-output name=deploymentResult::"authentication failed"
-#  exit 0
-# fi
+cf auth "$user" "$password"
+#authenticationResult=$(cf auth "$user" "$password")
+#
+#if [[ $authenticationResult != *"OK"* ]]; then
+# ::set-output name=deploymentResult::"authentication failed"
+# exit 1
+#fi
 
 
 echo "cf target -o \"$org\" -s \"$space\""
