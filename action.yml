@@ -5,6 +5,9 @@ author: 'Comsysto Reply'
    myInput:
      description: 'Input to use'
      default: 'world'
+   outputs:
+     deploymentResult:
+       description: 'The result of the cf deployment'
 runs:
   using: 'docker'
   image: 'Dockerfile'
