@@ -29,7 +29,7 @@ deploy(){
 
   artifactName=$(find . -name '*.jar')
 
-  processStatus=$(cf push -f "$artifactName" --no-start)
+  processStatus=$(cf push -p "$artifactName" --no-start)
 }
 
 
