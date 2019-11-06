@@ -1,6 +1,13 @@
 #!/bin/sh -l
 unset processStatus
 
+api=$1
+org=$2
+space=$3
+user=$4
+password=$5
+artifactDir=$6
+
 handleLoginFailed(){
  processStatus="Login failed"
  echo "$processStatus"
@@ -18,14 +25,12 @@ target(){
 
 deploy(){
   echo "deploying ..."
-  processStatus=$(cf push)
+  ls -la "$artifactDir"
+  # cd "$artifactDir" || exit
+  # processStatus=$(cf push)
 }
 
-api=$1
-org=$2
-space=$3
-user=$4
-password=$5
+
 
 cf api "$api"
 

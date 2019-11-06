@@ -12,6 +12,8 @@ inputs:
     description: 'The username used to login to cloudfoundry'
   password:
     description: 'The password used to login to cloudfoundry'
+  artifactDir:
+    description: 'The directory where the artifact and the manifest.yml resides'
 outputs:
   deploymentResult:
     description: 'The result of the cf deployment'
@@ -24,3 +26,4 @@ runs:
     - ${{ inputs.space }}
     - ${{ inputs.user }}
     - ${{ inputs.password }}
+    - ${{ inputs.artifactDir }}
