@@ -36,6 +36,6 @@ case "$authenticationResult" in
    ;;
 esac
 
-echo ::set-output name=deploymentResult::"$processStatus"
+::set-output name=deploymentResult::"$processStatus"
 
 
