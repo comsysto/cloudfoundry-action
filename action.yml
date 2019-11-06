@@ -2,9 +2,12 @@ name: 'Cloudfoundry Action'
 description: 'Github action to deploy to cloudfoundry'
 author: 'Comsysto Reply'
 inputs:
-  myInput:
-    description: 'Input to use'
-    default: 'world'
+  api:
+    description: 'The cloudfoundry api to connect to'
+  org:
+    description: 'The cloudfoundry org to login to'
+  space:
+    description: 'The cloudfoundry space to deploy to'
 outputs:
   deploymentResult:
     description: 'The result of the cf deployment'
@@ -12,4 +15,6 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.myInput }}
+    - ${{ inputs.api }}
+    - ${{ inputs.org }}
+    - ${{ inputs.space }}
