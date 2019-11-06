@@ -16,6 +16,11 @@ target(){
   cf target -o "$1" -s "$2"
 }
 
+deploy(){
+  echo "deploying ..."
+  processStatus=$(cf push)
+}
+
 api=$1
 org=$2
 space=$3
@@ -29,7 +34,7 @@ echo "Loggin in to cloudfoundry at $api"
 authenticationResult=$(cf auth "$user" "$password")
 case "$authenticationResult" in
  *OK*)
-   handleLoginSuccessful && target "$org" "$space"
+   handleLoginSuccessful && target "$org" "$space" && deploy
    ;;
  *)
    handleLoginFailed
