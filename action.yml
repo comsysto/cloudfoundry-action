@@ -8,6 +8,10 @@ inputs:
     description: 'The cloudfoundry org to login to'
   space:
     description: 'The cloudfoundry space to deploy to'
+  user:
+    description: 'The username used to login to cloudfoundry'
+  password:
+    description: 'The password used to login to cloudfoundry'
 outputs:
   deploymentResult:
     description: 'The result of the cf deployment'
@@ -18,3 +22,5 @@ runs:
     - ${{ inputs.api }}
     - ${{ inputs.org }}
     - ${{ inputs.space }}
+    - ${{ inputs.user }}
+    - ${{ inputs.password }}
