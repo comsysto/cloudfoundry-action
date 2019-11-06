@@ -1,12 +1,12 @@
-name: 'Container Action Template'
-description: 'Get started with Container actions'
-author: 'GitHub'
-inputs: 
-  myInput:
-    description: 'Input to use'
-    default: 'world'
+name: 'Cloudfoundry Action'
+description: 'Github action to deploy to cloudfoundry'
+author: 'Comsysto Reply'
+ inputs:
+   myInput:
+     description: 'Input to use'
+     default: 'world'
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - ${{ inputs.myInput }}
+   args:
+     - ${{ inputs.myInput }}
