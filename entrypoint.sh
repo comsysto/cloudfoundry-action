@@ -25,13 +25,12 @@ target(){
 
 deploy(){
   echo "Deploying ..."
-  mv "$artifactDir/*" .
 
-  artifactName=$(find . -name '*.jar')
+  artifactName=$(find "$artifactDir" -name '*.jar')
+  manifestYaml=$(find "$artifactDir" -name '*.yaml')
 
-  processStatus=$(cf push -p "$artifactName" --no-start)
+  processStatus=$(cf push -f "$manifestYaml" -p "$artifactName" --no-start)
 }
-
 
 
 cf api "$api"
