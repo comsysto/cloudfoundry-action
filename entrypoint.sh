@@ -1,4 +1,20 @@
 #!/bin/sh -l
+unset processStatus
+
+handleLoginFailed(){
+ processStatus="Login failed"
+ echo "$processStatus"
+}
+
+
+handleLoginSuccessful(){
+  processStatus="Login successful"
+  echo "$processStatus"
+}
+
+target(){
+  cf target -o "$1" -s "$2"
+}
 
 api=$1
 org=$2
@@ -9,14 +25,17 @@ password=$5
 cf api "$api"
 
 echo "Loggin in to cloudfoundry at $api"
-# cf auth "$user" "$password"
+
 authenticationResult=$(cf auth "$user" "$password")
+case "$authenticationResult" in
+ *OK*)
+   handleLoginSuccessful && target "$org" "$space"
+   ;;
+ *)
+   handleLoginFailed
+   ;;
+esac
 
-if [[ $authenticationResult != *"OK"* ]]; then
- ::set-output name=deploymentResult::"authentication failed"
- exit 1
-fi
+echo ::set-output name=deploymentResult::"$processStatus"
 
-echo "cf target -o \"$org\" -s \"$space\""
 
-echo ::set-output name=deploymentResult::"successful"
