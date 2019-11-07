@@ -1,0 +1,17 @@
+name: 'Cloudfoundry Action'
+description: 'Github action to authenticate to cloudfoundry'
+author: 'Comsysto Reply'
+inputs:
+  api:
+    description: 'The cloudfoundry api to connect to'
+  user:
+    description: 'The username used to login to cloudfoundry'
+  password:
+    description: 'The password used to login to cloudfoundry'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.api }}
+    - ${{ inputs.user }}
+    - ${{ inputs.password }}
