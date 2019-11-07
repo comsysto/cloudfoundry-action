@@ -8,9 +8,6 @@ inputs:
     description: 'The username used to login to cloudfoundry'
   password:
     description: 'The password used to login to cloudfoundry'
-outputs:
-  authResult:
-    description: 'The result of the cf authentication'
 runs:
   using: 'docker'
   image: 'Dockerfile'
