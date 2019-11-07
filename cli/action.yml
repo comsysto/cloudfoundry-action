@@ -1,0 +1,6 @@
+name: 'Cloudfoundry Action'
+description: 'Github action that wraps the cloudfoundry cli'
+author: 'Comsysto Reply'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
