@@ -1,29 +1,20 @@
-FROM ubuntu:18.04
+FROM alpine
 
 COPY LICENSE README.md /
 
 # Default to UTF-8 file.encoding
 ENV LANG C.UTF-8
 
-# add common software
-# add common software
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get -y install \
-        wget \
-        sudo \
-        bash \
-        gnupg
+# Add required software
+RUN apk update && \
+    apk add --no-cache curl
 
-# add clound foundry repo
-RUN wget -q -O - "https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key" | sudo apt-key add - && \
-    echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
-
-# Install requirements
-RUN apt-get update && \
-    apt-get -y install \
-        cf-cli && \
-    apt-mark hold cf-cli
+# Install Cloud Foundry CLI
+# ...or Linux 64-bit binary
+RUN curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github" | tar -zx
+# ...move it to /usr/local/bin or a location you know is in your $PATH
+RUN mv cf /usr/local/bin
+RUN cf --version
 
 COPY entrypoint.sh /entrypoint.sh
 
