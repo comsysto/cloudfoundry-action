@@ -16,7 +16,7 @@ but since there are some issues with passing credentials to the [cli](cli/README
 ## Keep your credentials encrypted
 
 GitHub provides the feature to [store credentials encrypted](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets#creating-encrypted-secrets) 
-in the security section of the repository you want to create a [workflow](https://help.github.com/en/actions/automating-your-workflow-with-github-actions).
+in the settings section of the repository you want to create a [workflow](https://help.github.com/en/actions/automating-your-workflow-with-github-actions).
 Once configured, any configured secret is available in your workflow by referencing `${{ secrets.<secretName> }}`.
 ## Example usage
 
@@ -50,7 +50,7 @@ jobs:
 ```
 ## Projects that uses the the cloudfoundry-action
 
-* https://github.com/comsysto/agile-dev-starter-project
+* https://github.com/comsysto/github-action-lab
 
 ## Sources:
 
