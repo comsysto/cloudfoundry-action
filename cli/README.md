@@ -1,7 +1,7 @@
 # Cloudfoundry Action - cli
 
 
-This action is simply a wrapper around the cf cli. Every parameter passed to the action in the args section will be executed with `cf $*`.
+This action is simply a wrapper around the cf CLI. Every parameter passed to the action in the args section will be executed with `cf $*`.
 
 ## Example usage
 ```

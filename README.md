@@ -1,11 +1,11 @@
 # Cloudfoundry Action
 
-A github docker action to authenticate to a cloudfoundry api and use the cli with the github workflow dsl.
+A GitHub Docker action to authenticate to a Cloud Foundry API and use the CLI with the GitHub workflow DSL.
 
-Supporting [cloudfoundry cli v6.47.2](https://github.com/cloudfoundry/cli/releases/tag/v6.47.2) commands.
+Supporting [Cloud Foundry CLI v6.47.2](https://github.com/cloudfoundry/cli/releases/tag/v6.47.2) commands.
 
 ## Structure
-The repo is separated into basically two actions:
+The repository is separated into two actions:
 
 * [auth](auth/README.md)
 * [cli](cli/README.md)
@@ -15,8 +15,8 @@ but since there are some issues with passing credentials to the [cli](cli/README
 
 ## Keep your credentials encrypted
 
-Github provides the feature to [store credentials encrypted](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets#creating-encrypted-secrets) 
-in the security section of the repo you want to create a [workflow](https://help.github.com/en/actions/automating-your-workflow-with-github-actions).
+GitHub provides the feature to [store credentials encrypted](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets#creating-encrypted-secrets) 
+in the security section of the repository you want to create a [workflow](https://help.github.com/en/actions/automating-your-workflow-with-github-actions).
 Once configured, any configured secret is available in your workflow by referencing `${{ secrets.<secretName> }}`.
 ## Example usage
 
