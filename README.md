@@ -11,6 +11,11 @@ The repo is separated into basically two actions:
 In a future release we might reduce it to [cli](cli/README.md) only, 
 but since there are some issues with passing credentials to the [cli](cli/README.md), the authentication is done by facilitating [auth](auth/README.md).
 
+## Keep your credentials encrypted
+
+Github provides the feature to [store credentials encrypted](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets#creating-encrypted-secrets) 
+in the security section of the repo you want to create a [workflow](https://help.github.com/en/actions/automating-your-workflow-with-github-actions).
+Once configured, any configured secret is available in your workflow by referencing `${{ secrets.<secretName> }}`.
 ## Example usage
 
 ```
@@ -43,8 +48,11 @@ jobs:
 ```
 ## Projects that uses the the cloudfoundry-action
 
+* https://github.com/comsysto/agile-dev-starter-project
 
 ## Sources:
+
+* [Official workflow documentation](https://help.github.com/en/actions/automating-your-workflow-with-github-actions)
 
 * [How to create a new repository based on a template](https://github.blog/2019-06-06-generate-new-repositories-with-repository-templates/)
 
