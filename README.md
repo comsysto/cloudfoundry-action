@@ -1,6 +1,6 @@
 # Cloudfoundry Action
 
-Authenticate to a cloudfoundry api and use the cli with the github workflow dsl.
+A github docker action to authenticate to a cloudfoundry api and use the cli with the github workflow dsl.
 
 Supporting [cloudfoundry cli v6.47.2](https://github.com/cloudfoundry/cli/releases/tag/v6.47.2) commands.
 
@@ -34,17 +34,17 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
       - name: Login to cloudfoundry
-        uses: comsysto/cloudfoundry-action/auth@release
+        uses: comsysto/cloudfoundry-action/auth@v1
         with:
           api: '<the-cf-api-of-your-choice>'
           user: ${{ secrets.CF_USERNAME }}
           password: ${{ secrets.CF_PASSWORD }}
       - name: cf target -o mvg -s development
-        uses: comsysto/cloudfoundry-action/cli@release
+        uses: comsysto/cloudfoundry-action/cli@v1
         with:
           args: target -o '<the-org-of-your-choice>' -s '<the-space-of-your-choice>'
       - name: cf push
-        uses: comsysto/cloudfoundry-action/cli@release
+        uses: comsysto/cloudfoundry-action/cli@v1
         with:
           args: push -f <path-to-the-manifest-file> -p <path-to-the-artifact-to-deploy>
 ```
