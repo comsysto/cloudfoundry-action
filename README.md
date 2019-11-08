@@ -1,4 +1,4 @@
-# Cloudfoundry Action
+# Cloud Foundry Action
 
 A GitHub Docker action to authenticate to a Cloud Foundry API and use the CLI with the GitHub workflow DSL.
 
