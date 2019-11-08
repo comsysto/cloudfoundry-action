@@ -1,4 +1,4 @@
-# Cloudfoundry Action - cli
+# Cloud Foundry Action - cli
 
 
 This action is simply a wrapper around the cf CLI. Every parameter passed to the action in the args section will be executed with `cf $*`.
@@ -7,7 +7,7 @@ This action is simply a wrapper around the cf CLI. Every parameter passed to the
 ```
 ...
 - name: switch cf space
-  uses: comsysto/cloudfoundry-action/cli@v1
+  uses: comsysto/cloudfoundry-action/cli@v1.0
   with:
     args: target -o '<the-org-of-your-choice>' -s '<the-space-of-your-choice>'
 ...
