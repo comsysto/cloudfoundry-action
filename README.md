@@ -2,6 +2,8 @@
 
 Authenticate to a cloudfoundry api and use the cli with the github workflow dsl.
 
+Supporting [cloudfoundry cli v6.47.2](https://github.com/cloudfoundry/cli/releases/tag/v6.47.2) commands.
+
 ## Structure
 The repo is separated into basically two actions:
 

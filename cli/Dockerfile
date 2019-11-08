@@ -11,7 +11,7 @@ RUN apk update && \
 
 # Install Cloud Foundry CLI
 # ...or Linux 64-bit binary
-RUN curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github" | tar -zx
+RUN curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&version=6.47.2&source=github" | tar -zx
 # ...move it to /usr/local/bin or a location you know is in your $PATH
 RUN mv cf /usr/local/bin
 RUN cf --version
