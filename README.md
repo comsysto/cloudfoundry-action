@@ -21,7 +21,7 @@ Once configured, any configured secret is available in your workflow by referenc
 ## Example usage
 
 ```
-name: Couldfoundry Deployment
+name: Could Foundry Deployment
 on: [push]
 jobs:
   deploy:
@@ -34,17 +34,17 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
       - name: Login to cloudfoundry
-        uses: comsysto/cloudfoundry-action/auth@v1
+        uses: comsysto/cloudfoundry-action/auth@v1.0
         with:
           api: '<the-cf-api-of-your-choice>'
           user: ${{ secrets.CF_USERNAME }}
           password: ${{ secrets.CF_PASSWORD }}
       - name: cf target -o mvg -s development
-        uses: comsysto/cloudfoundry-action/cli@v1
+        uses: comsysto/cloudfoundry-action/cli@v1.0
         with:
           args: target -o '<the-org-of-your-choice>' -s '<the-space-of-your-choice>'
       - name: cf push
-        uses: comsysto/cloudfoundry-action/cli@v1
+        uses: comsysto/cloudfoundry-action/cli@v1.0
         with:
           args: push -f <path-to-the-manifest-file> -p <path-to-the-artifact-to-deploy>
 ```
