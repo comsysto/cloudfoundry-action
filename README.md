@@ -39,7 +39,7 @@ jobs:
           api: '<the-cf-api-of-your-choice>'
           user: ${{ secrets.CF_USERNAME }}
           password: ${{ secrets.CF_PASSWORD }}
-      - name: cf target -o mvg -s development
+      - name: Switch to cf org and space
         uses: comsysto/cloudfoundry-action/cli@v1.0
         with:
           args: target -o '<the-org-of-your-choice>' -s '<the-space-of-your-choice>'
