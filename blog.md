@@ -1,3 +1,4 @@
+# GitHub Workflow - Build once, deploy to every Cloud Foundry
 Passend zur Veröffentlichung des neuen Workflow Features von GitHub, haben wir uns in einem Lab die GitHub Actions angesehen.
 
 Unser erster Eindruck: Es geht ziemlich leicht von der Hand.
