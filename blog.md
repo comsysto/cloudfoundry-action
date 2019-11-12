@@ -23,20 +23,68 @@ Die richtige Lizenz vorausgesetzt sind diese Actions auch OpenSource.
 Das Ergebnis war eine erste Version der [cloudfoundry-action](https://github.com/comsysto/cloudfoundry-action), mit der ein Deployment auf Cloud Foundry möglich war. 
 Allerdings war diese Version nicht flexibel einsetzbar, da Annahmen bzgl. der manifest.yml und der auszuliefernden jar Datei in der Action getroffen wurden. 
 
-Am Ende des Tages sah unser Workflow wie folgt aus:
-[Workflow Tag 1 EOB](https://github.com/comsysto/github-action-lab/blob/b159fed4cf232b6c14dbc022b49c6fa4c1671d89/.github/workflows/main.yml)
+Am Ende des Tages sah unser Workflow wie folgt aus. Das Bauen einer Software vom tatsächlichen Deployment dieser zu trennen, ist grundsätzlich eine gute Idee. Dazu aber mehr am Ende des Blogs.
+Dem Ansatz folgend enthält unser Workflow einen `build:` job und einen `deploy:` job.
+
+```
+name: Couldfoundry CI Lab
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: Build with Gradle
+      run: ./gradlew clean build
+    - name: Add manifest to build result
+      run: cp ./manifest.yaml ./build/libs
+    - uses: actions/upload-artifact@v1
+      with:
+        name: github-action-lab-artifact
+        path: build/libs
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Downlaod artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: github-action-lab-artifact
+      - name: Cloudfoundry deployment
+        id: cf
+        uses: comsysto/cloudfoundry-action@master
+        with:
+          api: 'https://api.run.pivotal.io'
+          org: 'mvg'
+          space: 'development'
+          user: ${{ secrets.CF_USERNAME }}
+          password: ${{ secrets.CF_PASSWORD }}
+          artifactDir: github-action-lab-artifact
+      - name: Cloudfoundry deployment result
+        run: echo "Deployment was ${{ steps.cf.outputs.deploymentResult }}"
+```
+
+Der offensichliche Nachteil. Aus dem Workflow geht nicht hervor, welche jar Datei in welcher Weise auf Cloud Foundry ausgeliefert wird. 
+Man kann nur annehmen, dass es die ist, die im Step `jobs.deploy.steps.name: Download artifact` step heruntergeladen wurde. 
+Vermutlich wird auch irgendwie die im `jobs.build.steps.name: Add manifest to build result` kopierte manifest.yaml verwendet.
 
 ## Tag 2
 
-Wir wollten bei der Verwendung der Cloud Foundry CLI über die Action alle möglichen CLI Kommandos unterstützen.
+Wir wollten bei der Verwendung der Action alle möglichen Cloud Foundry CLI Kommandos unterstützen, sie damit flexibler und den gesamten Workflow lesbarer machen.
 Angelehnt an die [gcloud action](https://github.com/actions/gcloud) haben wir die Action entsprechend angepasst und damit im Grunde einen Cloud Foundry CLI Wrapper geschaffen.
 Die Annahmen, die in ersten Version der Action verborgen waren und diese damit auch limitiert haben, konnten somit direkt im Workflow konfiguriert werden.
 
 Die einzige Möglichkeit, Daten zwischen Workflow Jobs zu teilen, ist der [Austausch über sogenannte Artefakte](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/persisting-workflow-data-using-artifacts).
 Diesen Mechanismus haben wir schon am Ende von Tag 1 verwendet, um die jar Datei und die manifest.yaml im Deployment Job zur Verfügung zu stellen.
 
-Jetzt da die cloudfoundry-action sich zu einem reinen CLI Wrapper entwickelt hat, brauchten wir wiederum eine Möglichkeit den Pfad zur jar Datei und zur manifest.yaml im Deployment Job verfügbar zu machen.
-Das erreichen wir durch das Erstellen einer sogenannten deploymentInformation.json Datei mit folgendem Inhalt:
+Jetzt da sich die cloudfoundry-action zu einem reinen CLI Wrapper entwickelt hat, brauchten wir wiederum eine Möglichkeit den Pfad zur jar Datei und zur manifest.yaml im `jobs.deploy` Job verfügbar zu machen.
+Das erreichen wir durch das Erstellen einer json Datei mit folgendem Inhalt:
+
 ```json
 {
   "artifactPath": "deploymentArchive/github-action-lab-0.0.1-SNAPSHOT.jar",
@@ -44,10 +92,14 @@ Das erreichen wir durch das Erstellen einer sogenannten deploymentInformation.js
 }
 ```
 
+
+
 ## Tag 3
 
-# build-once-deploy-everywhere Workflow
+# Fazit und Ausblick
 
-Das Bauen eines Artefakts vom tatsächlichen Deployment zu trennen, ist grundsätzlich eine gute Idee. Das ermöglicht eine build-once-deploy-everywhere Strategie.
+TODO: Statement zu was wir von GitHub Actions halten.
+ 
+Wie schon erwähnt setzen wir auf das Trennen des build jobs vom deploy job. Das ermöglicht eine build-once-deploy-everywhere CD Strategie.
 
-Wie genau erreichen wir das mit dem GitHub Workflow?
+Wie genau? Dem widmen wir uns in unserem nächsten Lab.
