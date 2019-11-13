@@ -15,12 +15,13 @@ Bei [Comsysto Reply](https://comsystoreply.de/) können wir uns 3 Tage pro Quart
 ## Tag 1
 Um ein vollständiges Workflow abzubilden, haben wir zunächst ein [github-action-lab](https://github.com/comsysto/github-action-lab) Projekt erstellt. 
 Dabei handelt es sich um eine simple Spring Boot Application, für die wir einen Workflow deefinieren wollen.
-Unsere naive Erwartung war, dass unter [GitHub Actions](https://github.com/actions) eine Action zu finden ist, die das Deployment eines Artefakts auf Cloud Foundry ermöglicht. 
-Da wir keine finden konnten, haben wir mit Hilfe der [Workflow Dokumentation](https://help.github.com/en/actions/automating-your-workflow-with-github-actions) eine eigene [cloudfoundry-action](https://github.com/comsysto/cloudfoundry-action) entwickelt. 
-Orientiert haben wir uns stark an der [gcloud action](https://github.com/actions/gcloud), da sie prinzipiell genau das ermöglicht, was wir auch auf der [Cloud Foundry CLI](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html) ausführen wollen. 
 
-Bald ist uns aufgegangen, dass Actions aus beliebigen GitHub Public Repositorys in einem Workflow benutzt werden können. Das ist auch ganz klar eine Stärke von GitHub Actions. Es ermöglicht jedem sehr einfach, der Community Actions zur Verfügung zu stellen, die bereits ein Problem gelöst haben. 
-Die richtige Lizenz vorausgesetzt sind diese Actions auch OpenSource.
+Unsere naive Erwartung war, dass unter [GitHub Actions](https://github.com/actions) eine Action zu finden ist, die das Deployment eines Artefakts auf Cloud Foundry ermöglicht. 
+Da wir keine finden konnten, suchten wir nach einer Möglichkeit eine neue Action zu entwickeln, die dann auch über die offizielle actions url zur Verfügung steht.
+Bald ist uns aufgegangen, dass Actions aus beliebigen GitHub Public Repositorys in einem Workflow benutzt werden können.  
+
+So haben wir mit Hilfe der [Workflow Dokumentation](https://help.github.com/en/actions/automating-your-workflow-with-github-actions) eine eigene [cloudfoundry-action](https://github.com/comsysto/cloudfoundry-action) entwickelt. 
+Orientiert haben wir uns stark an der [gcloud action](https://github.com/actions/gcloud), da sie prinzipiell genau das ermöglicht, was wir auch auf der [Cloud Foundry CLI](https://docs.cloudfoundry.org/cf-cli/getting-started.html) ausführen wollen. 
 
 Das Ergebnis war eine erste Version der [cloudfoundry-action](https://github.com/comsysto/cloudfoundry-action), mit der ein Deployment auf Cloud Foundry möglich war. 
 Allerdings war diese Version nicht flexibel einsetzbar, da Annahmen bzgl. der auszuliefernden jar-Datei und der manifest.yml in der Action getroffen wurden.
@@ -234,12 +235,15 @@ jobs:
 
 # Fazit und Ausblick
 
-TODO: Statement zu was wir von GitHub Actions halten.
-
 Hat man wenig Zeit, übersieht man oft Features, die einem das Leben erleichtern bzw. die im Grunde das Problem lösen, das man versucht selbst zu lösen. So ist es auch uns ergangen.
 Erst beim Schreiben dieses Beitrags haben wir die [create-release](https://github.com/actions/create-release) Action entdeckt. Es sieht so aus als könnte diese Action unsere [deployment-information-action](https://github.com/comsysto/deployment-information-action)
 ersetzen.
- 
+
+Eine Stärke von GitHub Actions ist ganz klar, dass jeder in einem öffentlichen Repository Actions entwickeln kann. 
+Diese können dann in beliebigen Workflows referenziert werden. Die richtige Lizenz vorausgesetzt sind diese Actions auch OpenSource.
+
+Sich in dem Angebot von Actions zurecht zu finden ist allerdings nicht intuitiv. Erwartet hätten wir, dass man auf https://github.com/actions/ auch nach 3dr Party Actions suchen kann. In der Suche berücksichtigt werden aber nur die offiziellen Actions.
+
 Wie schon erwähnt setzen wir auf das Trennen des build jobs vom deploy job. Das ermöglicht eine build-once-deploy-everywhere CD Strategie.
 
 Wie genau? Dem widmen wir uns in unserem nächsten Lab.
