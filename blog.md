@@ -22,10 +22,9 @@ Bald ist uns aufgegangen, dass Actions aus beliebigen GitHub Public Repositorys 
 Die richtige Lizenz vorausgesetzt sind diese Actions auch OpenSource.
 
 Das Ergebnis war eine erste Version der [cloudfoundry-action](https://github.com/comsysto/cloudfoundry-action), mit der ein Deployment auf Cloud Foundry möglich war. 
-Allerdings war diese Version nicht flexibel einsetzbar, da Annahmen bzgl. der manifest.yml und der auszuliefernden jar Datei in der Action getroffen wurden. 
+Allerdings war diese Version nicht flexibel einsetzbar, da Annahmen bzgl. der auszuliefernden jar-Datei und der manifest.yml in der Action getroffen wurden.
 
-Am Ende des Tages sah unser Workflow wie folgt aus. Das Bauen einer Software vom tatsächlichen Deployment dieser zu trennen, ist grundsätzlich eine gute Idee. Dazu aber mehr am Ende des Blogs.
-Dem Ansatz folgend enthält unser Workflow einen `build:` job und einen `deploy:` job.
+Das Bauen einer Software vom tatsächlichen Deployment dieser zu trennen, ist grundsätzlich eine gute Idee. Dazu aber mehr am Ende des Blogs. Dem Ansatz folgend enthält unser Workflow einen `build:` job und einen `deploy:` job. Am Ende des Tages sah unser Workflow wie folgt aus:
 
 ```
 name: Couldfoundry CI Lab
@@ -70,21 +69,21 @@ jobs:
         run: echo "Deployment was ${{ steps.cf.outputs.deploymentResult }}"
 ```
 
-Der offensichliche Nachteil. Aus dem Workflow geht nicht hervor, welche jar Datei in welcher Weise auf Cloud Foundry ausgeliefert wird. 
+Der offensichliche Nachteil: Aus dem Workflow geht nicht hervor, welche jar-Datei in welcher Weise auf Cloud Foundry ausgeliefert wird. 
 Man kann nur annehmen, dass es die ist, die im Step `jobs.deploy.steps.name: Download artifact` step heruntergeladen wurde. 
 Vermutlich wird auch irgendwie die im `jobs.build.steps.name: Add manifest to build result` kopierte manifest.yaml verwendet.
 
 ## Tag 2
 
-Wir wollten bei der Verwendung der Action alle möglichen Cloud Foundry CLI Kommandos unterstützen, sie damit flexibler und den gesamten Workflow lesbarer machen.
+Wir wollten bei der Verwendung der Action alle möglichen Cloud Foundry CLI Kommandos unterstützen, sie damit flexibler einsetzbar und den gesamten Workflow lesbarer machen.
 Angelehnt an die [gcloud action](https://github.com/actions/gcloud) haben wir die Action entsprechend angepasst und damit im Grunde einen Cloud Foundry CLI Wrapper geschaffen.
 Die Annahmen, die in ersten Version der Action verborgen waren und diese damit auch limitiert haben, konnten somit direkt im Workflow konfiguriert werden.
 
 Die einzige Möglichkeit, Daten zwischen Workflow Jobs zu teilen, ist der [Austausch über sogenannte Artefakte](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/persisting-workflow-data-using-artifacts).
-Diesen Mechanismus haben wir schon am Ende von Tag 1 verwendet, um die jar Datei und die manifest.yaml im Deployment Job zur Verfügung zu stellen.
+Diesen Mechanismus haben wir schon am Ende von Tag 1 verwendet, um die jar-Datei und die manifest.yaml im Deployment Job zur Verfügung zu stellen.
 
-Jetzt da sich die cloudfoundry-action zu einem reinen CLI Wrapper entwickelt hat, brauchten wir wiederum eine Möglichkeit den Pfad zur jar Datei und zur manifest.yaml im `jobs.deploy` Job verfügbar zu machen.
-Das erreichen wir durch das Erstellen einer json Datei mit folgendem Inhalt:
+Da sich die [cloudfoundry-action](https://github.com/comsysto/cloudfoundry-action) jetzt zu einem reinen CLI Wrapper entwickelt hat, brauchten wir wiederum eine Möglichkeit, den Pfad zur jar-Datei und zur manifest.yaml im `jobs.deploy` Job verfügbar zu machen.
+Das erreichten wir durch das Erstellen einer json-Datei mit folgendem Inhalt:
 
 ```json
 {
@@ -92,8 +91,6 @@ Das erreichen wir durch das Erstellen einer json Datei mit folgendem Inhalt:
   "manifestPath": "deploymentArchive/manifest.yaml"
 }
 ```
-
-
 
 ## Tag 3
 
