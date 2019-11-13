@@ -13,7 +13,8 @@ Vor dem GitHub Workflow Feature haben wir für CI/CD auf [Travis](https://travis
 Bei [Comsysto Reply](https://comsystoreply.de/) können wir uns 3 Tage pro Quartal neben der Projektarbeit mit neuen technischen Themen im Rahmen sogenannter Labs beschäftigen. Im Bezug auf oben genanntes Projekt haben wir diesmal das Thema [GitHub Actions](https://help.github.com/en/actions) näher beleuchtet.
 
 ## Tag 1
-
+Um ein vollständiges Workflow abzubilden, haben wir zunächst ein [github-action-lab](https://github.com/comsysto/github-action-lab) Projekt erstellt. 
+Dabei handelt es sich um eine simple Spring Boot Application, für die wir einen Workflow deefinieren wollen.
 Unsere naive Erwartung war, dass unter [GitHub Actions](https://github.com/actions) eine Action zu finden ist, die das Deployment eines Artefakts auf Cloud Foundry ermöglicht. 
 Da wir keine finden konnten, haben wir mit Hilfe der [Workflow Dokumentation](https://help.github.com/en/actions/automating-your-workflow-with-github-actions) eine eigene [cloudfoundry-action](https://github.com/comsysto/cloudfoundry-action) entwickelt. 
 Orientiert haben wir uns stark an der [gcloud action](https://github.com/actions/gcloud), da sie prinzipiell genau das ermöglicht, was wir auch auf der [Cloud Foundry CLI](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html) ausführen wollen. 
@@ -83,7 +84,10 @@ Die einzige Möglichkeit, Daten zwischen Workflow Jobs zu teilen, ist der [Austa
 Diesen Mechanismus haben wir schon am Ende von Tag 1 verwendet, um die jar-Datei und die manifest.yaml im Deployment Job zur Verfügung zu stellen.
 
 Da sich die [cloudfoundry-action](https://github.com/comsysto/cloudfoundry-action) jetzt zu einem reinen CLI Wrapper entwickelt hat, brauchten wir wiederum eine Möglichkeit, den Pfad zur jar-Datei und zur manifest.yaml im `jobs.deploy` Job verfügbar zu machen.
-Das erreichten wir durch das Erstellen einer json-Datei mit folgendem Inhalt:
+Das erreichten wir durch das Erstellen einer json-Datei im `jobs.build.name: Prepare deploymentArchive` Step, die dem Artefakt hinzugefügt wird, das wir im  `jobs.build.name: Upload deploymentArchive` Step persistieren.
+Andere Jobs im Workflow können dann das Artefakt herunterladen und auf den Inhalt zugreifen.
+
+Der Inhalt der `deploymentInformation.json` Datei sieht wie folgt aus:
 
 ```json
 {
@@ -91,7 +95,75 @@ Das erreichten wir durch das Erstellen einer json-Datei mit folgendem Inhalt:
   "manifestPath": "deploymentArchive/manifest.yaml"
 }
 ```
-[deployment-information-action](https://github.com/comsysto/deployment-information-action)
+
+Um im `jobs.deploy` Job diese Datei auszulesen, haben wir eine weitere [deployment-information-action/read](https://github.com/comsysto/deployment-information-action/read) entwickelt.
+Sie ist dafür zuständig die Json Datei auszulesen und die enthaltenen Werte über die Output Parameter `cf-manifest-path` und `artefact-path` nachfolgenden Steps
+
+Am Ende des Tag 2 sah unser Workflow wie folgt aus:
+```
+name: Couldfoundry CI Lab
+on: [push]
+#
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: Build with Gradle
+      run: ./gradlew clean build
+    - name: Prepare deploymentArchive
+      run: |
+        cp ./manifest.yaml ./build/libs
+        archivesBaseName="$(./gradlew properties -q | grep '^archivesBaseName:' | awk '{print $2}')"
+        version="$(./gradlew properties  -q | grep '^version:' | awk '{print $2}')"
+        cat >./build/libs/deploymentInfo.json <<EOL
+        {
+          "artifactPath": "deploymentArchive/${archivesBaseName}-${version}.jar",
+          "manifestPath": "deploymentArchive/manifest.yaml"
+        }
+        EOL
+        chmod +x ./build/libs/deploymentInfo.json
+    - name: Upload deploymentArchive
+      uses: actions/upload-artifact@v1
+      with:
+        name: deploymentArchive
+        path: build/libs
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: cf login to https://api.run.pivotal.io
+        uses: comsysto/cloudfoundry-action/auth@develop
+        with:
+          api: 'https://api.run.pivotal.io'
+          user: ${{ secrets.CF_USERNAME }}
+          password: ${{ secrets.CF_PASSWORD }}
+      - name: cf target -o mvg -s development
+        uses: comsysto/cloudfoundry-action/cli@develop
+        with:
+          args: target -o mvg -s development
+      - name: Download artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: deploymentArchive
+      - name: Read deploymentInfo.json
+        id: deploymentInfo
+        uses: comsysto/deployment-information-action/read@master
+        with:
+          archive-path: deploymentArchive
+      - name: Debug deploymentInfo
+        run: |
+          echo "${{ steps.deploymentInfo.outputs.cf-manifest-path }}"
+          echo "${{ steps.deploymentInfo.outputs.artifact-path }}"
+      - name: cf push
+        uses: comsysto/cloudfoundry-action/cli@develop
+        with:
+          args: push -f ${{ steps.deploymentInfo.outputs.cf-manifest-path }} -p ${{ steps.deploymentInfo.outputs.artifact-path
+```
 
 ## Tag 3
 
