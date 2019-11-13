@@ -71,8 +71,8 @@ jobs:
 ```
 
 Der offensichliche Nachteil: Aus dem Workflow geht nicht hervor, welche jar-Datei in welcher Weise auf Cloud Foundry ausgeliefert wird. 
-Man kann nur annehmen, dass es die ist, die im Step `jobs.deploy.steps.name: Download artifact` step heruntergeladen wurde. 
-Vermutlich wird auch irgendwie die im `jobs.build.steps.name: Add manifest to build result` kopierte manifest.yaml verwendet.
+Man kann nur annehmen, dass es die ist, die im Step `jobs.deploy.steps.name: Download artifact` Step heruntergeladen wurde. 
+Vermutlich wird auch irgendwie die im `jobs.build.steps.name: Add manifest to build result` Step kopierte manifest.yaml verwendet.
 
 ## Tag 2
 
