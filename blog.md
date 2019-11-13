@@ -1,5 +1,5 @@
 # GitHub Workflow - Build once, deploy to every Cloud Foundry
-Passend zur [im August angekündigten Veröffentlichung](https://github.blog/2019-08-08-github-actions-now-supports-ci-cd/) des neuen Workflow Features von GitHub, haben wir uns in einem Lab die GitHub Actions angesehen.
+Passend zum [im August angekündigten Release](https://github.blog/2019-08-08-github-actions-now-supports-ci-cd/) des neuen Workflow Features von GitHub, haben wir uns in einem Lab die GitHub Actions angesehen.
 
 Unser erster Eindruck: Es geht ziemlich leicht von der Hand.
 
