@@ -164,8 +164,10 @@ jobs:
 ```
 
 ## Tag 3
+Um das Erstellen der json Datei noch in eine Action auszulagern, haben wir uns am letzten Tag noch der [deployment-information-action/create](https://github.com/comsysto/deployment-information-action/create) Action gewidmet.
+Sie nimmt als input parameter `artifact-base-name`, `artifact-base-name`, `archive-name`, `archive-name` und erstellt daraus die unter Tag 2 beschriebene json Datei.
 
-Zum Ende unseres Labs haben wir mit folgender Workflow Konfiguration unser Ziel erreicht:
+Von beiden Actions haben wir dann noh ein erstes Release erstellt und voi la, am Ende unseres Labs haben wir mit folgender Workflow Konfiguration unser Ziel erreicht:
 ```
 name: Couldfoundry CI Lab
 on: [push]
@@ -195,7 +197,7 @@ jobs:
         artifact-base-name: ${{ steps.artifact-information.outputs.artifact-base-name }}
         artifact-version: ${{ steps.artifact-information.outputs.artifact-version }}
         archive-name: deploymentArchive
-        target-path: build/libs
+        `target-path`: build/libs
     - name: Upload deploymentArchive
       uses: actions/upload-artifact@v1
       with:
