@@ -30,7 +30,6 @@ Das Bauen einer Software vom tatsächlichen Deployment dieser zu trennen, ist gr
 ```
 name: Couldfoundry CI Lab
 on: [push]
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -97,13 +96,12 @@ Der Inhalt der `deploymentInformation.json` Datei sieht wie folgt aus:
 ```
 
 Um im `jobs.deploy` Job diese Datei auszulesen, haben wir eine weitere [deployment-information-action/read](https://github.com/comsysto/deployment-information-action/read) entwickelt.
-Sie ist dafür zuständig die Json Datei auszulesen und die enthaltenen Werte über die Output Parameter `cf-manifest-path` und `artefact-path` nachfolgenden Steps
+Sie ist dafür zuständig die Json Datei auszulesen und die enthaltenen Werte über die Output Parameter `cf-manifest-path` und `artefact-path` nachfolgenden Steps zur Verfügung zu stellen.
 
-Am Ende des Tag 2 sah unser Workflow wie folgt aus:
+Am Ende von Tag 2 sah unser Workflow wie folgt aus:
 ```
 name: Couldfoundry CI Lab
 on: [push]
-#
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -166,6 +164,71 @@ jobs:
 ```
 
 ## Tag 3
+
+Zum Ende unseres Labs haben wir mit folgender Workflow Konfiguration unser Ziel erreicht:
+```
+name: Couldfoundry CI Lab
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: Build with Gradle
+      run: ./gradlew clean build
+    - name: Copy manifest.yaml
+      run: cp ./manifest.yaml ./build/libs
+    - name: Retrieve artifact information from gradle
+      id: artifact-information
+      run: |
+        archivesBaseName="$(./gradlew properties -q | grep '^archivesBaseName:' | awk '{print $2}')"
+        version="$(./gradlew properties  -q | grep '^version:' | awk '{print $2}')"
+        echo "::set-output name=artifact-base-name::${archivesBaseName}"
+        echo "::set-output name=artifact-version::${version}"
+    - name: Create deployment information
+      uses: comsysto/deployment-information-action/create@master
+      with:
+        artifact-base-name: ${{ steps.artifact-information.outputs.artifact-base-name }}
+        artifact-version: ${{ steps.artifact-information.outputs.artifact-version }}
+        archive-name: deploymentArchive
+        target-path: build/libs
+    - name: Upload deploymentArchive
+      uses: actions/upload-artifact@v1
+      with:
+        name: deploymentArchive
+        path: build/libs
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: cf login to https://api.run.pivotal.io
+        uses: comsysto/cloudfoundry-action/auth@v1.0
+        with:
+          api: 'https://api.run.pivotal.io'
+          user: ${{ secrets.CF_USERNAME }}
+          password: ${{ secrets.CF_PASSWORD }}
+      - name: cf target -o mvg -s development
+        uses: comsysto/cloudfoundry-action/cli@v1.0
+        with:
+          args: target -o mvg -s development
+      - name: Download artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: deploymentArchive
+      - name: Read deploymentInfo.json
+        id: deploymentInfo
+        uses: comsysto/deployment-information-action/read@release
+        with:
+          archive-path: deploymentArchive
+      - name: cf push
+        uses: comsysto/cloudfoundry-action/cli@v1.0
+        with:
+          args: push -f ${{ steps.deploymentInfo.outputs.cf-manifest-path }} -p ${{ steps.deploymentInfo.outputs.artifact-path }} --no-start
+```
 
 # Fazit und Ausblick
 
