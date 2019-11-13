@@ -99,69 +99,7 @@ Um im `jobs.deploy` Job diese Datei auszulesen, haben wir eine weitere [deployme
 Sie ist dafür zuständig die Json Datei auszulesen und die enthaltenen Werte über die Output Parameter `cf-manifest-path` und `artefact-path` nachfolgenden Steps zur Verfügung zu stellen.
 
 Am Ende von Tag 2 sah unser Workflow wie folgt aus:
-```
-name: Couldfoundry CI Lab
-on: [push]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - name: Set up JDK 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-    - name: Build with Gradle
-      run: ./gradlew clean build
-    - name: Prepare deploymentArchive
-      run: |
-        cp ./manifest.yaml ./build/libs
-        archivesBaseName="$(./gradlew properties -q | grep '^archivesBaseName:' | awk '{print $2}')"
-        version="$(./gradlew properties  -q | grep '^version:' | awk '{print $2}')"
-        cat >./build/libs/deploymentInfo.json <<EOL
-        {
-          "artifactPath": "deploymentArchive/${archivesBaseName}-${version}.jar",
-          "manifestPath": "deploymentArchive/manifest.yaml"
-        }
-        EOL
-        chmod +x ./build/libs/deploymentInfo.json
-    - name: Upload deploymentArchive
-      uses: actions/upload-artifact@v1
-      with:
-        name: deploymentArchive
-        path: build/libs
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: cf login to https://api.run.pivotal.io
-        uses: comsysto/cloudfoundry-action/auth@develop
-        with:
-          api: 'https://api.run.pivotal.io'
-          user: ${{ secrets.CF_USERNAME }}
-          password: ${{ secrets.CF_PASSWORD }}
-      - name: cf target -o mvg -s development
-        uses: comsysto/cloudfoundry-action/cli@develop
-        with:
-          args: target -o mvg -s development
-      - name: Download artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: deploymentArchive
-      - name: Read deploymentInfo.json
-        id: deploymentInfo
-        uses: comsysto/deployment-information-action/read@master
-        with:
-          archive-path: deploymentArchive
-      - name: Debug deploymentInfo
-        run: |
-          echo "${{ steps.deploymentInfo.outputs.cf-manifest-path }}"
-          echo "${{ steps.deploymentInfo.outputs.artifact-path }}"
-      - name: cf push
-        uses: comsysto/cloudfoundry-action/cli@develop
-        with:
-          args: push -f ${{ steps.deploymentInfo.outputs.cf-manifest-path }} -p ${{ steps.deploymentInfo.outputs.artifact-path
-```
+<script src="https://gist.github.com/Silencer-/b4968b99f2f47578b769c2fd93437c14.js"></script>
 
 ## Tag 3
 Um das Erstellen der json Datei noch in eine Action auszulagern, haben wir uns am letzten Tag noch der [deployment-information-action/create](https://github.com/comsysto/deployment-information-action/create) Action gewidmet.
