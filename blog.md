@@ -28,7 +28,7 @@ Allerdings war diese Version nicht flexibel einsetzbar, da Annahmen bzgl. der au
 
 Das Bauen einer Software vom tatsächlichen Deployment dieser zu trennen, ist grundsätzlich eine gute Idee. Dazu aber mehr am Ende des Blogs. Dem Ansatz folgend enthält unser Workflow einen `build:` job und einen `deploy:` job. Am Ende des Tages sah unser Workflow wie folgt aus:
 
-```
+```yaml
 name: Couldfoundry CI Lab
 on: [push]
 jobs:
@@ -100,7 +100,7 @@ Um im `jobs.deploy` Job diese Datei auszulesen, haben wir eine weitere [deployme
 Sie ist dafür zuständig die Json Datei auszulesen und die enthaltenen Werte über die Output Parameter `cf-manifest-path` und `artefact-path` nachfolgenden Steps zur Verfügung zu stellen.
 
 Am Ende von Tag 2 sah unser Workflow wie folgt aus:
-```
+```yaml
 name: Couldfoundry CI Lab
 on: [push]
 jobs:
@@ -161,7 +161,7 @@ jobs:
       - name: cf push
         uses: comsysto/cloudfoundry-action/cli@develop
         with:
-          args: push -f ${{ steps.deploymentInfo.outputs.cf-manifest-path }} -p ${{ steps.deploymentInfo.outputs.artifact-path
+          args: push -f ${{ steps.deploymentInfo.outputs.cf-manifest-path }} -p ${{ steps.deploymentInfo.outputs.artifact-path }}
 ```
 
 ## Tag 3
@@ -169,7 +169,7 @@ Um das Erstellen der json Datei noch in eine Action auszulagern, haben wir uns a
 Sie nimmt als input parameter `artifact-base-name`, `artifact-base-name`, `archive-name`, `archive-name` und erstellt daraus die unter Tag 2 beschriebene json Datei.
 
 Von beiden Actions haben wir dann noh ein erstes Release erstellt und voi la, am Ende unseres Labs haben wir mit folgender Workflow Konfiguration unser Ziel erreicht:
-```
+```yaml
 name: Couldfoundry CI Lab
 on: [push]
 jobs:
