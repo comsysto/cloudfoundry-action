@@ -13,7 +13,7 @@ Vor dem GitHub Workflow Feature haben wir für CI/CD auf [Travis](https://travis
 Bei [Comsysto Reply](https://comsystoreply.de/) können wir uns 3 Tage pro Quartal neben der Projektarbeit mit neuen technischen Themen im Rahmen sogenannter Labs beschäftigen. Im Bezug auf oben genanntes Projekt haben wir diesmal das Thema [GitHub Actions](https://help.github.com/en/actions) näher beleuchtet.
 
 ## Tag 1
-Um ein vollständiges Workflow abzubilden, haben wir zunächst ein [github-action-lab](https://github.com/comsysto/github-action-lab) Projekt erstellt. 
+Um einen vollständigen Workflow abzubilden, haben wir zunächst ein [github-action-lab](https://github.com/comsysto/github-action-lab) Projekt erstellt. 
 Dabei handelt es sich um eine simple Spring Boot Application, für die wir einen Workflow deefinieren wollen.
 
 Unsere naive Erwartung war, dass unter [GitHub Actions](https://github.com/actions) eine Action zu finden ist, die das Deployment eines Artefakts auf Cloud Foundry ermöglicht. 
