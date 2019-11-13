@@ -91,12 +91,17 @@ Das erreichten wir durch das Erstellen einer json-Datei mit folgendem Inhalt:
   "manifestPath": "deploymentArchive/manifest.yaml"
 }
 ```
+[deployment-information-action](https://github.com/comsysto/deployment-information-action)
 
 ## Tag 3
 
 # Fazit und Ausblick
 
 TODO: Statement zu was wir von GitHub Actions halten.
+
+Hat man wenig Zeit, übersieht man oft Features, die einem das Leben erleichtern bzw. die im Grunde das Problem lösen, das man versucht selbst zu lösen. So ist es auch uns ergangen.
+Erst beim Schreiben dieses Beitrags haben wir die [create-release](https://github.com/actions/create-release) Action entdeckt. Es sieht so aus als könnte diese Action unsere [deployment-information-action](https://github.com/comsysto/deployment-information-action)
+ersetzen.
  
 Wie schon erwähnt setzen wir auf das Trennen des build jobs vom deploy job. Das ermöglicht eine build-once-deploy-everywhere CD Strategie.
 
